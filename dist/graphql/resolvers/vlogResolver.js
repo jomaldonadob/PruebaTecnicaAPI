@@ -23,11 +23,11 @@ exports.createVlogMutation = {
     resolve(_, args) {
         return __awaiter(this, void 0, void 0, function* () {
             const { title, description, userId } = args;
-            // Validar que el título no sea nulo
+            //Validar que el título no sea nulo
             if (!title) {
                 throw new Error('El título del vlog no puede estar vacío.');
             }
-            // Crear el vlog en la base de datos
+            //Crear el vlog en la base de datos
             const newVlog = yield database_1.db.insert('vlogs', {
                 title,
                 description,
@@ -47,12 +47,12 @@ exports.likeVlogMutation = {
     resolve(_, args) {
         return __awaiter(this, void 0, void 0, function* () {
             const { vlogId } = args;
-            // Buscar el vlog en la base de datos
+            //Buscar el vlog en la base de datos
             const vlog = yield database_1.db.findOne('vlogs', { id: vlogId });
             if (!vlog) {
                 throw new Error('El vlog no existe.');
             }
-            // Incrementar el contador de likes
+            //Incrementar el contador de likes
             const updatedVlog = yield database_1.db.update('vlogs', { id: vlogId }, { likes: vlog.likes + 1 });
             return updatedVlog;
         });

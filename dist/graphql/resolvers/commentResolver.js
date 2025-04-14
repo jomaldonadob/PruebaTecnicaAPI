@@ -12,21 +12,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.addCommentMutation = void 0;
 const graphql_1 = require("graphql");
 const CommentType_1 = require("../types/CommentType");
-const validators_1 = require("../../utils/validators");
 const database_1 = require("../../database");
 exports.addCommentMutation = {
     type: CommentType_1.CommentType,
     args: {
-        vlogId: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLID) },
-        userId: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLID) },
-        text: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLString) },
+        vlogId: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLID) }, // ID del vlog
+        userId: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLID) }, // ID del usuario
+        text: { type: new graphql_1.GraphQLNonNull(graphql_1.GraphQLString) }, // Texto del comentario
     },
     resolve(_, args) {
         return __awaiter(this, void 0, void 0, function* () {
             const { vlogId, userId, text } = args;
-            // Validar el texto del comentario
-            if (!(0, validators_1.validateCommentText)(text)) {
-                throw new Error('El texto del comentario no es válido. Debe ser no nulo, contener solo caracteres ASCII y tener un máximo de 1000 caracteres.');
+            // Validar que el texto no sea nulo, no exceda 1000 caracteres y contenga solo caracteres ASCII
+            if (!text || text.length > 1000) {
+                throw new Error('El texto del comentario no es válido. Debe tener entre 1 y 1000 caracteres.');
+            }
+            const asciiRegex = /^[\x00-\x7F]*$/;
+            if (!asciiRegex.test(text)) {
+                throw new Error('El texto del comentario solo puede contener caracteres ASCII.');
             }
             // Registrar el comentario en la base de datos
             const newComment = yield database_1.db.insert('comments', {

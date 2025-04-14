@@ -21,7 +21,7 @@ exports.getUserQuery = {
     },
     resolve(_, args) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userId = args.id; // Extraer el ID del objeto genérico
+            const userId = args.id; //Extraer el ID del objeto genérico
             const user = yield database_1.db.findOne('users', { id: userId });
             if (!user) {
                 throw new Error('Usuario no encontrado.');
@@ -39,12 +39,12 @@ exports.createUserMutation = {
     resolve(_, args) {
         return __awaiter(this, void 0, void 0, function* () {
             const { username, email } = args;
-            // Validar que el email no esté ya registrado
+            //Validar que el email no esté ya registrado
             const existingUser = yield database_1.db.findOne('users', { email });
             if (existingUser) {
                 throw new Error('El email ya está registrado.');
             }
-            // Crear el nuevo usuario
+            //Crear el nuevo usuario
             const newUser = yield database_1.db.insert('users', {
                 username,
                 email,
@@ -57,8 +57,8 @@ exports.createUserMutation = {
 exports.getAllUsersQuery = {
     type: new graphql_2.GraphQLList(UserType_1.UserType),
     resolve: () => __awaiter(void 0, void 0, void 0, function* () {
-        // Obtén todos los usuarios de la base de datos
-        const users = yield database_1.db.findAll('users'); // Asegúrate de que esta función exista en tu base de datos
-        return users || []; // Devuelve un array vacío si no hay usuarios
+        //Obtén todos los usuarios de la base de datos
+        const users = yield database_1.db.findAll('users');
+        return users || []; //Devuelve un array vacío si no hay usuarios
     }),
 };
